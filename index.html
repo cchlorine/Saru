@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh_CN">
+<head>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Kunrの电台</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="stylesheet" href="font.css">
+	<link rel="stylesheet" href="style.css">
+
+	<script src="js/jquery.min.js"></script>
+    <script src="js/reset.js"></script>
+
+    <!--[if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+
+	<div id="wrap">
+		<div class="iniciel">
+			<div class="home"><i class="fa fa-home" title="Home"></i></div>
+			<div class="iniciel_control"><i class="fa fa-plus" title="More Button.."></i></div>
+		</div>
+		<div class="control">
+			<div class="repeat"><i class="fa fa-random" title="Random"></i></div>
+			<div class="quality"><i class="fa fa-star" title="High Quality"></i></div>
+			<div class="setting"><i class="fa fa-gear" title="Setting"></i></div>
+			<div class="pre"><i class="fa fa-chevron-left"></i></div>
+			<div class="next"><i class="fa fa-chevron-right"></i></div>
+		</div>
+		<div class="middle">
+			<nav class="play-list">
+				<div class="list-button"><i class="fa fa-bars"></i></div>
+				<ul>
+				</ul>
+			</nav>
+
+			<article class="player">
+				<section class="buttons">
+					<span class="album">
+						<img src="img/album.jpg" alt="album" id="pic">
+						<span class="center"><span class="start"><i class="fa fa-play"></i></span></span>
+						<span class="progress">
+							<span class="current"></span>
+						</span>
+					</span>
+				</section>
+				<section class="title">
+					<h1 class="name">Album's Name</h1>
+					<h2 class="sub-title">Album's Sub-title</h2>
+				</section>
+				<audio id="music" src=""></audio>
+			</article>
+
+		</div>
+	
+	</div>
+
+	<script src="js/playlist.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
