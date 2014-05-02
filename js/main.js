@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	//´ò¿ª¹Ø±Õ²¥·ÅÁÐ±í
+	//ï¿½ò¿ª¹Ø±Õ²ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 	listStatus = 0;
 	$('.list-button').click(function(){
 		listWidth = $('#wrap .play-list ul').width();
@@ -14,7 +14,7 @@ $(document).ready(function(){
 		}	
 	})
 	//console.log(localStorage.currentMusic + '-' + localStorage.repeat + '-' + localStorage.quality);
-	//¼ÓÔØ±¾µØÊý¾Ý£¨Èç¹ûÓÐµÄ»°£©
+	//ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ»ï¿½ï¿½ï¿½
 	if(typeof(localStorage.repeat) == undefined || isNaN(localStorage.repeat))
 		localStorage.repeat = '0';
 	if(typeof(localStorage.quality) == undefined || isNaN(localStorage.quality))
@@ -24,7 +24,7 @@ $(document).ready(function(){
 	if(typeof(localStorage.prevplay) == currentMusic || isNaN(localStorage.currentMusic) || !playlist[localStorage.currentMusic])
 		localStorage.currentMusic = '0';
 	//localStorage.currentMusic = 0;
-	//¸÷ÖÖÐèÒªÓÃµ½µÄ±äÁ¿
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ãµï¿½ï¿½Ä±ï¿½ï¿½ï¿½
 	var audio = document.getElementById('music');
 	var isPlaying    = false;
 	var currentMusic = localStorage.currentMusic;
@@ -33,7 +33,7 @@ $(document).ready(function(){
 	var relist = ['fa-random', 'fa-refresh', 'fa-retweet'];
 	var retitle = ['Random', 'Cycle', 'Order'];
 
-	//¸ù¾Ý×´Ì¬ÐÞ¸ÄÍ¼±ê
+	//ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Þ¸ï¿½Í¼ï¿½ï¿½
 	if(!quality){
 		$('.control .quality i').removeClass('fa-star').addClass('fa-star-half').attr('title','Normal Quality'); 
 	} else {
@@ -43,7 +43,7 @@ $(document).ready(function(){
 
 	console.log('Current Music: ' + currentMusic + ' Repeat: '+ repeat + ' Quality: '+ quality);
 
-	//¼ÓÔØ²¥·ÅÁÐ±í
+	//ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 	for (var i = 0; i < playlist.length; i++){
 		var item = playlist[i];
 		$('.play-list ul').append('<li class="item' + i + '">' + item.title + '</li>');
@@ -57,7 +57,7 @@ $(document).ready(function(){
 		// 0 means we have permission to display notifications
 		
 	}
-	//ÔØÈëÍ¼Æ¬ºÍÒôÀÖÎÄ¼þ
+	//ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	var loadMusic = function(i){
 		if(localStorage.currentMusic > -1)
 		localStorage.setItem('prevplay', localStorage.currentMusic * 1);
@@ -70,16 +70,16 @@ $(document).ready(function(){
 		    dataType: 'jsonp',
 		    jsonp: 'callback',
 		    async: false,
-		    url: 'http://kunr.aliapp.com/xiami.php?id=' + item.id + '&type=song&callback=?',
+		    url: 'http://er.fantuanpu.com/xiami.php?id=' + item.id + '&type=song&callback=?',
 		    success: function(data) {
-				//Ñ¡Ôñ²»Í¬ÖÊÁ¿µÄÒôÀÖÎÄ¼þ
+				//Ñ¡ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 		    	if(!quality){
 					src = item.mp3_h;
 				} else {
 					src = data.song_src;
 				}
 				src = data.song_src;
-				//¼ÓÔØ¸÷ÖÖ¶«Î÷
+				//ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½
 				audio.setAttribute("src", src);
 				audio.addEventListener('play', playEvent, false);
 				audio.addEventListener('pause', stopEvent, false);
