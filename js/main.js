@@ -121,11 +121,11 @@ $(document).ready(function(){
 	}
 
 	var randomNum = function(min,max){
-		var radx = Math.floor(min + Math.random() * (max - min));
-		if(radx != localStorage.currentMusic)
-			return radx;
-		else
-			return Math.floor(min + Math.random() * (max - min));
+		var radx;
+		while( !radx || radx == localStorage.currentMusic ){
+            radx = Math.floor(min + Math.random() * (max - min));
+        }
+        return radx;
 	}
 
 	/*'fa-random', 'fa-refresh', 'fa-retweet'*/
