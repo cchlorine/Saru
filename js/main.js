@@ -15,14 +15,6 @@ $(document).ready(function(){
 	})
 	//console.log(localStorage.currentMusic + '-' + localStorage.repeat + '-' + localStorage.quality);
 	//���ر������ݣ������еĻ���
-	if(typeof(localStorage.repeat) == undefined || isNaN(localStorage.repeat))
-		localStorage.repeat = '0';
-	if(typeof(localStorage.quality) == undefined || isNaN(localStorage.quality))
-		localStorage.quality = '0';
-	if(typeof(localStorage.prevplay) == undefined || isNaN(localStorage.prevplay))
-		localStorage.prevplay = '-1';
-	if(typeof(localStorage.prevplay) == currentMusic || isNaN(localStorage.currentMusic) || !playlist[localStorage.currentMusic])
-		localStorage.currentMusic = '0';
 	//localStorage.currentMusic = 0;
 	//������Ҫ�õ��ı���
 	var audio = document.getElementById('music');
@@ -261,4 +253,12 @@ $(document).ready(function(){
 	$('.home').click(function(){
 		window.open('http://www.dsu.pw');
 	})
+	if(typeof(localStorage.repeat) == undefined || isNaN(localStorage.repeat))
+		localStorage.repeat = '0';
+	if(typeof(localStorage.repeat) == undefined || isNaN(localStorage.repeat))
+		localStorage.repeat = '0';
+	if(typeof(localStorage.prevplay) == undefined || isNaN(localStorage.prevplay))
+		localStorage.prevplay = '-1';
+	if(typeof(localStorage.prevplay) == currentMusic || isNaN(localStorage.currentMusic) || !playlist[localStorage.currentMusic])
+		autoChange(); else changeMusic(localStorage.currentMusic * 1);
 })
