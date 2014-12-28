@@ -7,6 +7,16 @@ $(document).ready(function(){
 		$('.play-list ul').append('<li class="item' + i + '">' + item.title + ' - ' + item.artist + '</li>');
 	}
 
+	/* 随机 */
+	var randomNum = function(min,max){
+		var radx;
+		if ((max - min) < 1) return 1;
+		while ( !radx || radx == localStorage.currentMusic ){
+			radx = Math.floor(min + Math.random() * (max - min));
+		}
+		return radx;
+	}
+
 	/* 播放事件 */
 
 	var Saru_EventPlay = function(){
@@ -59,15 +69,6 @@ $(document).ready(function(){
 	}
 
 	playMusic(0);
-
-
-	var randomNum = function(min,max){
-		var radx;
-		while( !radx || radx == localStorage.currentMusic ){
-            radx = Math.floor(min + Math.random() * (max - min));
-        }
-        return radx;
-	}
 
 	/*'fa-random', 'fa-refresh', 'fa-retweet'*/
 	var autoChange = function(){
