@@ -400,8 +400,8 @@ hgroup h2 {
 }
 
 @media screen and (max-width: 768px) {
-  hgroup h1 { font-size: 3em; }
-  hgroup h2 { font-size: 2em; }
+  hgroup h1 { font-size: 2em; }
+  hgroup h2 { font-size: 1.5em; }
 }
 
 /* Progress */
