@@ -29,10 +29,15 @@ $(document).ready(function(){
 	/* 随机 */
 	var randomNum = function(min,max){
 		var radx;
+
+		// 避免只有一首时死循环
 		if ((max - min) < 1) return 1;
-		while ( !radx || Sarudata['current'] ){
+
+		// 随机避免和现在重复
+		while ( !radx || radx === SaruData['current'] ){
 			radx = Math.floor(min + Math.random() * (max - min));
 		}
+
 		return radx;
 	}
 
@@ -56,16 +61,48 @@ $(document).ready(function(){
 		$('#progress .current').css({'width': audio.currentTime / audio.duration * 100 + '%'});
 	}
 
+	/* 自动切歌 */
+
+	var Saru_EventAutoChange = function(){
+		audio.pause();
+		var nextMusic = 0;
+
+		switch(repeat){
+			case 0: // 随机播放
+			default:
+				playMusic(randomNum(0, playlist.length));
+				break;
+
+			case 1: // 单曲循环
+				audio.currentTime = 0.0;
+				audio.play();
+				break;
+
+			case 2: // 列表顺序
+				if (SaruData['current'] == playlist.length - 1){
+					playMusic(0);
+				} else {
+					playMusic(SaruData['current'] + 1);
+				}
+				break;
+		}
+	}
+
 	/* 音乐播放 */
 
 	var playMusic = function(i){
+		// 记录
+		SaruData['prev']    = localStorage.SaruPrev    = SaruData['current'];
+		SaruData['current'] = localStorage.SaruCurrent = i;
+
+		// 获取ID
 		item = playlist[i];
 
 		audio.setAttribute("src", item['sources'][0]['source']);
 		audio.addEventListener('play',  Saru_EventPlay, false);
 		audio.addEventListener('pause', Saru_EventStop, false);
 		audio.addEventListener('timeupdate', Saru_EventUpdateProgress, false);
-		//audio.addEventListener('ended', autoChange, false);
+		audio.addEventListener('ended', Saru_EventAutoChange, false);
 
 
 		// 设置封面
@@ -107,25 +144,6 @@ $(document).ready(function(){
 
 	playMusic(0);
 
-	/*'fa-random', 'fa-refresh', 'fa-retweet'*/
-	var autoChange = function(){
-		audio.pause();
-		var nextMusic = 0;
-		switch(repeat){
-			case 0: nextMusic = randomNum(0, playlist.length);
-				changeMusic(nextMusic);
-				break;
-			case 1: audio.currentTime = 0.0;
-				audio.play();
-				break;
-			case 2: if(currentMusic == playlist.length - 1){
-					changeMusic(0);
-				} else {
-					changeMusic(currentMusic + 1);
-				}
-				break;
-		}
-	}
 
 	$('.center').click(function() {
 		if ($('#player').hasClass('playing')){
