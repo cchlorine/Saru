@@ -63,7 +63,7 @@ $(document).ready(function(){
 
 	/* 自动切歌 */
 
-	var Saru_EventAutoChange = function(){
+	var Saru_ChangeNext = function(){
 		audio.pause();
 		var nextMusic = 0;
 
@@ -88,6 +88,19 @@ $(document).ready(function(){
 		}
 	}
 
+	var Saru_ChangePrev = function(){
+		audio.pause();
+		if((+SaruData['current'] + 1) === SaruData['prev'] && SaruData['prev'] > -1) {
+			playMusic(SaruData['prev']);
+		} else if (+SaruData['current'] == 0){
+			changeMusic(playlist.length - 1);
+		} else if (SaruData['current'] == playlist.length) {
+			changeMusic(SaruData['current']);
+		} else {
+			changeMusic(SaruData['current'] - 1);
+		}
+	}
+
 	/* 音乐播放 */
 
 	var playMusic = function(i){
@@ -102,7 +115,7 @@ $(document).ready(function(){
 		audio.addEventListener('play',  Saru_EventPlay, false);
 		audio.addEventListener('pause', Saru_EventStop, false);
 		audio.addEventListener('timeupdate', Saru_EventUpdateProgress, false);
-		audio.addEventListener('ended', Saru_EventAutoChange, false);
+		audio.addEventListener('ended', Saru_ChangeNext, false);
 
 
 		// 设置封面
@@ -153,20 +166,12 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.control .pre').click(function(){
-		audio.pause();
-		if((currentMusic * 1 + 1) != localStorage.prevplay && localStorage.prevplay > -1){
-			changeMusic(localStorage.prevplay);
-		} else if(currentMusic == 0){
-			changeMusic(playlist.length - 1);
-		} else {
-			changeMusic(currentMusic - 1);
-		}
+	$('.control .prev').click(function(){
+		Saru_ChangePrev();
 	})
 
 	$('.control .next').click(function(){
-		audio.pause();
-		Saru_EventAutoChange();
+		Saru_ChangeNext();
 	})
 
 	$('.play-list ul li').click(function(){
