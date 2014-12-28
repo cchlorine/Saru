@@ -234,7 +234,7 @@ $(document).ready(function(){
 		Saru_ChangeNext();
 	});
 
-	$('.control .random').click(function(){
+	$('.control .repeat').click(function(){
 		Saru_ChangePlayMode();
 	});
 
