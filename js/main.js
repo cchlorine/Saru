@@ -1,42 +1,61 @@
 $(document).ready(function(){
-	var audio     = document.getElementById('music');
+	var audio     = document.getElementById('music'),
+			isPlaying = true;
 
 	for (var i = 0; i < playlist.length; i++){
 		var item = playlist[i];
 		$('.play-list ul').append('<li class="item' + i + '">' + item.title + ' - ' + item.artist + '</li>');
 	}
 
-	var currentMusic = localStorage.currentMusic;
-	var repeat = parseInt(localStorage.repeat);
-	var quality = 0;
-	var relist = ['fa-random', 'fa-refresh', 'fa-retweet'];
-	var retitle = ['Random', 'Cycle', 'Order'];
+	/* 播放事件 */
 
-	if(!quality){
-		$('.control .quality i').removeClass('fa-star').addClass('fa-star-half').attr('title','Normal Quality');
-	} else {
-		$('.control .quality i').removeClass('fa-star-half').addClass('fa-star').attr('title','High Quality');
+	var Saru_EventPlay = function(){
+		$('.album').addClass('playing');
+		$('#wrap .progress').animate({opacity:"1"});
+		$('.start i').addClass('playing').removeClass('fa-play').addClass('fa-pause');
 	}
-	$('.control .repeat i').removeClass().addClass('fa').addClass(relist[repeat]).attr('title',retitle[repeat]);
 
-	var updateProgress = function(){
+	/* 暂停事件 */
+
+	var Saru_EventStop = function(){
+		$('.album').removeClass('playing');
+		$('.start i').removeClass('playing').removeClass('fa-pause').addClass('fa-play');
+	}
+
+	/* 进度条更新事件 */
+
+	var Saru_EventUpdateProgress = function() {
 		$('#progress .current').css({'width': audio.currentTime / audio.duration * 100 + '%'});
 	}
+
+	/* 音乐播放 */
 
 	var playMusic = function(i){
 		item = playlist[i];
 
 		audio.setAttribute("src", item['sources'][0]['source']);
-		audio.addEventListener('play', playEvent, false);
-		audio.addEventListener('pause', stopEvent, false);
-		audio.addEventListener('timeupdate', updateProgress, false);
+		audio.addEventListener('play',  Saru_EventPlay, false);
+		audio.addEventListener('pause', Saru_EventStop, false);
+		audio.addEventListener('timeupdate', Saru_EventUpdateProgress, false);
 		//audio.addEventListener('ended', autoChange, false);
 
-		cover = 'img/album.jpg';
-		$('#cover').attr({'style': 'background-image:url(' + item['cover'] + ');', 'title': item['title'] + ' - ' + item['artist']});
+
+		// 设置封面
+		cover = item['cover'] ? item['cover'] : 'img/album.jpg';
+
+		$('#cover').attr({
+			'style': 'background-image:url(' + cover + ');',
+			'title': item['title'] + ' - ' + item['artist']
+		});
+
+		// 设置标题
 		$('hgroup h1').html(item['title']);
 		$('hgroup h2').html(item['artist']);
+
+		// 播放列表
 		$('.play-list ul li').removeClass('playing').eq(i).addClass('playing');
+
+		// 开始播放
 		audio.play();
 	}
 
@@ -69,17 +88,6 @@ $(document).ready(function(){
 				}
 				break;
 		}
-	}
-
-	var playEvent = function(){
-		$('.album').addClass('playing');
-		$('#wrap .progress').animate({opacity:"1"});
-		$('.start i').addClass('playing').removeClass('fa-play').addClass('fa-pause');
-	}
-
-	var stopEvent = function(){
-		$('.album').removeClass('playing');
-		$('.start i').removeClass('playing').removeClass('fa-pause').addClass('fa-play');
 	}
 
 	$('.center').click(function(){
