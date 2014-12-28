@@ -67,7 +67,7 @@ $(document).ready(function(){
 		audio.pause();
 		var nextMusic = 0;
 
-		switch(repeat){
+		switch(SaruData['rmode']){
 			case 0: // 随机播放
 			default:
 				playMusic(randomNum(0, playlist.length));
@@ -166,14 +166,7 @@ $(document).ready(function(){
 
 	$('.control .next').click(function(){
 		audio.pause();
-		if(localStorage.repeat == 0){
-			nextMusic = randomNum(0, playlist.length);
-			changeMusic(nextMusic);
-		} else if(currentMusic == playlist.length - 1){
-			changeMusic(0);
-		} else {
-			changeMusic(currentMusic * 1 + 1);
-		}
+		Saru_EventAutoChange();
 	})
 
 	$('.play-list ul li').click(function(){
