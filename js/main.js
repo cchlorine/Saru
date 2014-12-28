@@ -107,6 +107,7 @@ $(document).ready(function(){
 		// 记录
 		SaruData['prev']    = localStorage.SaruPrev    = SaruData['current'];
 		SaruData['current'] = localStorage.SaruCurrent = i;
+		location.hash = '#!' + i;
 
 		// 获取ID
 		item = playlist[i];
@@ -155,7 +156,11 @@ $(document).ready(function(){
 		audio.play();
 	}
 
-	playMusic(0);
+	if (location.hash.match(/[\d]+/)) {
+		playMusic(location.hash.match(/[\d]+/)[0]);
+	} else {
+		playMusic(0);
+	}
 
 
 	$('.center').click(function() {
