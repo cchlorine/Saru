@@ -163,30 +163,35 @@ a:hover{ text-decoration:underline; }
 
 .control {
   position: fixed;
-  top: 5%;
+  left: 2%;
+  top: 30%;
   margin: 0 0 0 20px;
   z-index: 999;
 }
 
 .control i {
-  background: rgba(0,0,0,0.2);
-  padding: 20px;
   width: 70px;
-  margin-top: 10px;
-  color: rgba(255,255,255,0.8);
-  font-size: 2em;
+  padding: 25px;
+  font-size: 1.5em;
+  margin-top: 20px;
   border-radius: 50%;
   text-align: center;
+  background: rgba(0, 0, 0, .2);
+  color: rgba(255, 255, 255, .8);
+  -webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;
 }
 
 .control i:hover {
   background: rgba(0,0,0,0.4);
   color: rgba(255,255,255,1);
   cursor: pointer;
+  box-shadow: 0 0 0 5px #fff, 0 0 0 8px rgba(0,0,0,0.2);
 }
 
 @media screen and (max-width: 768px) {
   .control {
+    top: 3%;
     padding-top: 0;
   }
 
@@ -197,12 +202,13 @@ a:hover{ text-decoration:underline; }
   .control i {
     width: 60px;
     height: 60px;
-    padding: 15px;
+    padding: 17px;
     background: rgba(0,0,0,0.8);
   }
 
   .control i:hover {
     background: #000;
+    box-shadow: none;
   }
 }
 
@@ -298,12 +304,16 @@ a:hover{ text-decoration:underline; }
 #main .start .fa-play,
 #main .start .fa-pause {
   font-size: 4em;
+  -webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;
   color: rgba(255,255,255,0.6);
 }
 
 #main .start .fa-play:hover,
 #main .start .fa-pause:hover {
   color: rgba(255,255,255,0.8);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
   cursor: pointer;
 }
 

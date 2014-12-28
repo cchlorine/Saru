@@ -1,6 +1,25 @@
 $(document).ready(function(){
+
+	/* 本地数据初始化 */
+	if(typeof(localStorage.SaruQuality) == undefined || isNaN(localStorage.SaruQuality))
+		localStorage.SaruQuality = 0;
+
+	if(typeof(localStorage.SaruRepeat) == undefined || isNaN(localStorage.SaruRepeat))
+		localStorage.SaruRepeat = 0;
+
+	if(typeof(localStorage.SaruLike) == undefined || isNaN(localStorage.SaruLike))
+		localStorage.SaruLike = '{}';
+
+	/* 常量 */
 	var audio     = document.getElementById('music'),
-			isPlaying = true;
+			isPlaying = true,
+			SaruData  = {
+				'current' : 0,
+				'prev'    : -1,
+				'quality' : parseInt(localStorage.SaruQuality),
+				'rmoede'  : parseInt(localStorage.SaruRepeat)
+			},
+			SaruLike = localStorage.SaruLike;
 
 	for (var i = 0; i < playlist.length; i++){
 		var item = playlist[i];
@@ -11,7 +30,7 @@ $(document).ready(function(){
 	var randomNum = function(min,max){
 		var radx;
 		if ((max - min) < 1) return 1;
-		while ( !radx || radx == localStorage.currentMusic ){
+		while ( !radx || Sarudata['current'] ){
 			radx = Math.floor(min + Math.random() * (max - min));
 		}
 		return radx;
