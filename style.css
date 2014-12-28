@@ -278,7 +278,6 @@ a:hover{ text-decoration:underline; }
 #main .center {
   top: 0;
   left: 0;
-  opacity: 0;
   width: 100%;
   height: 100%;
   cursor: pointer;
@@ -288,6 +287,10 @@ a:hover{ text-decoration:underline; }
   transition: opacity linear.4s;
   -webkit-transition: opacity linear.4s;
   box-shadow: inset 0 0 15px 3px rgba(0, 0, 0, .7);
+}
+
+.playing .center {
+  opacity: 0;
 }
 
 #main:hover .center {

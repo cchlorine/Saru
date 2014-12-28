@@ -184,4 +184,32 @@ $(document).ready(function(){
 			playMusic(num);
 		}
 	});
+
+	/* HotKey */
+	$(document).keydown(function(e) {
+		var keycode = e.keyCode || e.which || e.charCode;
+
+		switch (keycode) {
+			case 39:
+			case 78: // 右键, n键; 下一首
+				Saru_ChangeNext();
+				break;
+
+			case 37: // 左键; 上一首
+				Saru_ChangePrev();
+				break;
+
+			case 80:
+			case 32: // P键, 空格键; 播放暂停
+				if ($('#player').hasClass('playing')){
+					audio.pause();
+				} else {
+					audio.play();
+				}
+				break;
+
+			case 76: //L键; 喜欢
+				break;
+		}
+	});
 });
