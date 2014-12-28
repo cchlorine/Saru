@@ -217,7 +217,7 @@ a:hover{ text-decoration:underline; }
   .control i {
     width: 60px;
     height: 60px;
-    padding: 17px;
+    padding: 18px 17px;
     background: rgba(0,0,0,0.8);
   }
 

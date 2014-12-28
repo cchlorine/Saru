@@ -9,6 +9,11 @@ var playlist = [
         "songext" : "m4a",
         "quality" : "normal",
         "source"  : "songs/Centuries.m4a"
+      },
+      {
+        "songext" : "m4a",
+        "quality" : "high",
+        "source"  : "songs/Centuries.m4a"
       }
     ]
   }

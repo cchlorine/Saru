@@ -2,13 +2,13 @@ $(document).ready(function(){
 
 	/* 本地数据初始化 */
 
-	if(typeof(localStorage.SaruQuality) == undefined || isNaN(localStorage.SaruQuality))
+	if(typeof(localStorage.SaruQuality) == undefined)
 		localStorage.SaruQuality = 0;
 
-	if(typeof(localStorage.SaruRepeat) == undefined || isNaN(localStorage.SaruRepeat))
+	if(typeof(localStorage.SaruRepeat) == undefined)
 		localStorage.SaruRepeat = 0;
 
-	if(typeof(localStorage.SaruLike) == undefined || isNaN(localStorage.SaruLike))
+	if(typeof(localStorage.SaruLike) == undefined)
 		localStorage.SaruLike = '[]';
 
 	/* 常量 */
