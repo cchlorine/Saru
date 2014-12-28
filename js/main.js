@@ -277,6 +277,10 @@ $(document).ready(function(){
 				}
 				break;
 
+			case 77: //M键; 播放顺序
+				Saru_ChangePlayMode();
+				break;
+
 			case 76: //L键; 喜欢; 不喜欢
 				Saru_LikeDislikeIt();
 				break;
