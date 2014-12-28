@@ -231,6 +231,9 @@ a:hover{ text-decoration:underline; }
   position: relative;
   border: 1px solid #999;
 
+  background-size: cover;
+  background: url(img/album.jpg) #000 no-repeat center;
+
   animation-play-state: paused;
   -webkit-animation-play-state: paused;
   animation: rotate 20s linear infinite;
@@ -361,8 +364,9 @@ hgroup {
   color: #222;
 }
 
-hgroup h1{
+hgroup h1 {
   font-size: 18px;
+  font-weight: normal;
 }
 
 hgroup h1:before {
@@ -374,8 +378,8 @@ hgroup h1:after {
 }
 
 hgroup h2 {
-  margin-top: 10px;
   font-size: 14px;
+  font-weight: normal;
 }
 
 @media screen and (max-width: 768px) {
