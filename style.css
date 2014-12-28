@@ -232,9 +232,9 @@ a:hover{ text-decoration:underline; }
   border-radius: 50%;
   position: relative;
   border: 1px solid #999;
-
-  background-size: 250px;
+  
   background: url(img/album.jpg) #000 no-repeat center;
+  background-size: 250px;
 
   animation-play-state: paused;
   -webkit-animation-play-state: paused;
