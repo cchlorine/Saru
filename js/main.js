@@ -24,16 +24,18 @@ $(document).ready(function(){
 	}
 
 	var playMusic = function(i){
-		audio.setAttribute("src", playlist[i]['sources'][0]['source']);
+		item = playlist[i];
+
+		audio.setAttribute("src", item['sources'][0]['source']);
 		audio.addEventListener('play', playEvent, false);
 		audio.addEventListener('pause', stopEvent, false);
 		audio.addEventListener('timeupdate', updateProgress, false);
 		//audio.addEventListener('ended', autoChange, false);
 
 		cover = 'img/album.jpg';
-		$('.album img').attr({'src': cover, 'alt': item.artist});
-		$('#wrap .title h1').html(item.title);
-		$('#wrap .title h2').html(item.artist);
+		$('#cover').attr({'style': 'background-image:url(' + item['cover'] + ');', 'title': item['title'] + ' - ' + item['artist']});
+		$('hgroup h1').html(item['title']);
+		$('hgroup h2').html(item['artist']);
 		$('.play-list ul li').removeClass('playing').eq(i).addClass('playing');
 		audio.play();
 	}
