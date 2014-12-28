@@ -157,9 +157,13 @@ $(document).ready(function(){
 	}
 
 	if (location.hash.match(/[\d]+/)) {
-		playMusic(location.hash.match(/[\d]+/)[0]);
+		var hash = location.hash.match(/[\d]+/)[0];
+		if (hash < playlist.length)
+			playMusic(hash);
+	} else if (localStorage.SaruPrev > -1 && localStorage.SaruPrev < playlist.length) {
+		playMusic(localStorage.SaruPrev);
 	} else {
-		playMusic(0);
+		playMusic(randomNum(0,playlist.length));
 	}
 
 
