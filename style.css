@@ -2,12 +2,15 @@
 /* 防止用户自定义背景颜色对网页的影响，添加让用户可以自定义字体 */
 html{
   color:#333;
-  background: #F0F0F0;
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:100%;
   text-rendering:optimizelegibility;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: grayscale;
+}
+
+body {
+  background: #F0F0F0;
 }
 
 /* 如果你的项目仅支持 IE9+ | Chrome | Firefox 等，推荐在 <html> 中添加 .borderbox 这个 class */
