@@ -31,7 +31,7 @@ $(document).ready(function(){
 		var radx;
 
 		// 避免只有一首时死循环
-		if ((max - min) < 1) return 0;
+		if ((+max - min) <= 1) return 0;
 
 		// 随机避免和现在重复
 		while ( !radx || radx === SaruData['current'] ){
