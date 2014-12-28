@@ -295,7 +295,8 @@ a:hover{ text-decoration:underline; }
   margin: -30px 0 0 -20px;
 }
 
-#main .start .fa-play, .cover .start .fa-pause {
+#main .start .fa-play,
+#main .start .fa-pause {
   font-size: 4em;
   color: rgba(255,255,255,0.6);
 }

@@ -10,15 +10,14 @@ $(document).ready(function(){
 	/* 播放事件 */
 
 	var Saru_EventPlay = function(){
-		$('.album').addClass('playing');
-		$('#wrap .progress').animate({opacity:"1"});
+		$('#player').addClass('playing');
 		$('.start i').addClass('playing').removeClass('fa-play').addClass('fa-pause');
 	}
 
 	/* 暂停事件 */
 
 	var Saru_EventStop = function(){
-		$('.album').removeClass('playing');
+		$('#player').removeClass('playing');
 		$('.start i').removeClass('playing').removeClass('fa-pause').addClass('fa-play');
 	}
 
