@@ -169,7 +169,7 @@ a:hover{ text-decoration:underline; }
 .control i {
   background: rgba(0,0,0,0.2);
   padding: 20px;
-  width: 60px;
+  width: 70px;
   margin-top: 10px;
   color: rgba(255,255,255,0.8);
   font-size: 2em;
@@ -195,7 +195,7 @@ a:hover{ text-decoration:underline; }
   .control i {
     width: 60px;
     height: 60px;
-    padding: 20px;
+    padding: 15px;
     background: rgba(0,0,0,0.8);
   }
 
@@ -242,6 +242,23 @@ a:hover{ text-decoration:underline; }
   animation-play-state: running;
 }
 
+@media screen and (max-width: 992px) {
+  #cover {
+    width: 25em;
+    height: 25em;
+  }
+}
+
+@-webkit-keyframes rotate {
+  from { -webkit-transform: rotate(0deg) }
+  to { -webkit-transform: rotate(360deg) }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(359deg) }
+}
+
 /* Play / Pause */
 
 #main .center {
@@ -265,9 +282,8 @@ a:hover{ text-decoration:underline; }
 
 #main .start {
   position: absolute;
-  padding: 50%;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
   margin: -30px 0 0 -20px;
 }
 
@@ -282,6 +298,13 @@ a:hover{ text-decoration:underline; }
   cursor: pointer;
 }
 
+@media screen and (max-width: 992px) {
+  #main .center {
+    opacity: 1;
+    background: rgba(0,0,0,.3) !important;
+  }
+}
+
 @media screen and (max-width: 768px) {
   #main .start .fa-play,
   #main .start .fa-pause {
@@ -294,55 +317,39 @@ a:hover{ text-decoration:underline; }
   }
 }
 
-@-webkit-keyframes rotate {
-  from { -webkit-transform: rotate(0deg) }
-  to { -webkit-transform: rotate(360deg) }
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg) }
-  to { transform: rotate(359deg) }
-}
-
-@media screen and (max-width: 992px) {
-  .album img{
-    width: 25em;
-    height: 25em;
-  }
-  .album .center {
-    opacity: 1;
-    background: rgba(0,0,0,.3)!important;
-  }
-}
+/* Mini Player */
 
 @media screen and (max-width: 422px) {
-  body {height: 100%;width: 100%;overflow: hidden}
+  body { height: 100%; width: 100%; overflow: hidden; }
   article {margin: 0}
-  .buttons > span {
-    position: absolute;
+
+  #main {
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    position: absolute;
   }
-  .album img {
-    min-width: 100%;
-    min-height: 100%;
-    display: block;
+
+  #cover {
     top: 0;
     left: 0;
-    border-radius: 0;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    animation: none;
     -webkit-animation: none;
-    -moz-animation: none;
-    -o-animation: none;
-    animation:none;
+    border-radius: 0;
   }
-  .album .center {
+
+  #main .center {
     background: transparent!important;
     box-shadow: none!important;
     opacity: 1!important;
   }
-  .title { display: none; }
+
+  hgroup { display: none; }
 }
 
 /* Titles */
@@ -378,23 +385,20 @@ hgroup h2 {
 
 /* Progress */
 #progress {
+  height: 3px;
+  width: 250px;
   display: block;
-  height:3px;
-  margin-top: 10px;
-  width: 100%;
+  margin: 10px auto 0;
   background: #DDD;
 }
 
 #progress .current {
-  position: relative;
-  display: block;
   width: 0%;
   height: 100%;
-  -webkit-transition:.5s ease;
-  -moz-transition:.5s ease;
-  -o-transition:.5s ease;
-  transition:.5s ease;
-  background:  #666;
+  display: block;
+  background: #666;
+  transition: .5s ease;
+  -webkit-transition: .5s ease;
 }
 
 @media screen and (max-width: 422px) {
