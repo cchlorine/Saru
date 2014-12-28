@@ -93,11 +93,11 @@ $(document).ready(function(){
 		if((+SaruData['current'] + 1) === SaruData['prev'] && SaruData['prev'] > -1) {
 			playMusic(SaruData['prev']);
 		} else if (+SaruData['current'] == 0){
-			changeMusic(playlist.length - 1);
+			playMusic(playlist.length - 1);
 		} else if (SaruData['current'] == playlist.length) {
-			changeMusic(SaruData['current']);
+			playMusic(SaruData['current']);
 		} else {
-			changeMusic(SaruData['current'] - 1);
+			playMusic(SaruData['current'] - 1);
 		}
 	}
 
@@ -181,7 +181,7 @@ $(document).ready(function(){
 			$('#wrap .list-button').animate({marginRight: -5},300);
 			$('#wrap .play-list ul').animate({marginRight: -400},300);
 			audio.pause();
-			changeMusic(num);
+			playMusic(num);
 		}
 	});
 });
