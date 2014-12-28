@@ -17,7 +17,7 @@ $(document).ready(function(){
 				'current' : 0,
 				'prev'    : -1,
 				'quality' : parseInt(localStorage.SaruQuality),
-				'rmoede'  : parseInt(localStorage.SaruRepeat)
+				'rmode'   : parseInt(localStorage.SaruRepeat)
 			},
 			SaruLike = localStorage.SaruLike;
 
@@ -40,14 +40,14 @@ $(document).ready(function(){
 
 	var Saru_EventPlay = function(){
 		$('#player').addClass('playing');
-		$('.start i').addClass('playing').removeClass('fa-play').addClass('fa-pause');
+		$('.start i').removeClass('fa-play').addClass('fa-pause');
 	}
 
 	/* 暂停事件 */
 
 	var Saru_EventStop = function(){
 		$('#player').removeClass('playing');
-		$('.start i').removeClass('playing').removeClass('fa-pause').addClass('fa-play');
+		$('.start i').removeClass('fa-pause').addClass('fa-play');
 	}
 
 	/* 进度条更新事件 */
@@ -83,6 +83,24 @@ $(document).ready(function(){
 		// 播放列表
 		$('.play-list ul li').removeClass('playing').eq(i).addClass('playing');
 
+		// 提示
+		Notification.requestPermission(function (perm) {
+			if (perm == "granted") {
+				var notification = new Notification (item['title'], {
+					dir: "auto",
+					lang: "hi",
+					tag: "SaruFM",
+					icon: item['cover'],
+					body: item['title'] + ' - ' + item['artist']
+				});
+				notification.onshow = function(){
+					setTimeout(function(){
+						notification.close();
+					}, 5000);
+				}
+			}
+		});
+
 		// 开始播放
 		audio.play();
 	}
@@ -109,16 +127,11 @@ $(document).ready(function(){
 		}
 	}
 
-	$('.center').click(function(){
-		if ($('.start i').hasClass('playing')){
+	$('.center').click(function() {
+		if ($('#player').hasClass('playing')){
 			audio.pause();
 		} else {
 			audio.play();
-			if(window.webkitNotifications){
-				if (window.webkitNotifications.checkPermission() != 0) {
-					window.webkitNotifications.requestPermission();
-				}
-			}
 		}
 	});
 
