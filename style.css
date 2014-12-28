@@ -2,7 +2,7 @@
 /* 防止用户自定义背景颜色对网页的影响，添加让用户可以自定义字体 */
 html{
   color:#333;
-  background:#fff;
+  background: #F0F0F0;
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:100%;
   text-rendering:optimizelegibility;
@@ -232,7 +232,7 @@ a:hover{ text-decoration:underline; }
   border-radius: 50%;
   position: relative;
   border: 1px solid #999;
-  
+
   background: url(img/album.jpg) #000 no-repeat center;
   background-size: 250px;
 
