@@ -164,7 +164,7 @@ a:hover{ text-decoration:underline; }
 .control {
   position: fixed;
   left: 2%;
-  top: 30%;
+  top: 20%;
   margin: 0 0 0 20px;
   z-index: 999;
 }
@@ -183,9 +183,24 @@ a:hover{ text-decoration:underline; }
 }
 
 .control i:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
   background: rgba(0,0,0,0.4);
   color: rgba(255,255,255,1);
-  cursor: pointer;
+  box-shadow: 0 0 0 5px #fff, 0 0 0 8px rgba(0,0,0,0.2);
+}
+
+.control .like i:hover {
+  box-shadow: 0 0 0 5px #fff, 0 0 0 8px rgba(255,0,0,0.2);
+}
+
+.control .like.likeit i {
+  color: #fff;
+  background: red;
+}
+
+.control .like.likeit i:hover {
   box-shadow: 0 0 0 5px #fff, 0 0 0 8px rgba(0,0,0,0.2);
 }
 

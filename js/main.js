@@ -9,7 +9,7 @@ $(document).ready(function(){
 		localStorage.SaruRepeat = 0;
 
 	if(typeof(localStorage.SaruLike) == undefined || isNaN(localStorage.SaruLike))
-		localStorage.SaruLike = '{}';
+		localStorage.SaruLike = '[]';
 
 	/* 常量 */
 
@@ -21,7 +21,7 @@ $(document).ready(function(){
 				'quality' : parseInt(localStorage.SaruQuality),
 				'pmode'   : parseInt(localStorage.SaruRepeat)
 			},
-			SaruLike = localStorage.SaruLike;
+			SaruLike = JSON.parse(localStorage.SaruLike);
 
 	/* 播放顺序 */
 
@@ -111,6 +111,7 @@ $(document).ready(function(){
 	}
 
 	/* 播放顺序 */
+
 	var Saru_ChangePlayMode = function(){
 		if(SaruData['pmode'] == 2){
 			$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[0]).attr('title',retitle[0]);
@@ -121,6 +122,28 @@ $(document).ready(function(){
 		}
 	}
 
+	/* 喜欢不喜欢歌曲 */
+
+	var Saru_LikeDislike = function(i){
+		var LikePosition = SaruLike.indexOf(i);
+
+		if (LikePosition == -1) {
+			SaruLike.push(i);
+			$('.control .like').addClass('likeit');
+		} else {
+			SaruLike.splice((LikePosition - 1), 1);
+			$('.control .like').removeClass('likeit');
+		}
+
+		localStorage.SaruLike = JSON.stringify(SaruLike);
+	}
+
+	/* 喜欢这首 */
+
+	var Saru_LikeDislikeIt = function(){
+		Saru_LikeDislike(SaruData['current']);
+	}
+
 	/* 音乐播放 */
 
 	var playMusic = function(i){
@@ -128,6 +151,15 @@ $(document).ready(function(){
 		SaruData['prev']    = localStorage.SaruPrev    = SaruData['current'];
 		SaruData['current'] = localStorage.SaruCurrent = i;
 		location.hash = '#!' + i;
+
+		// 判断是否喜欢
+		if (SaruLike.indexOf(i) > -1) {
+			if (!$('.control .like').hasClass('likeit'))
+				$('.control .like').addClass('likeit');
+		} else {
+			if ($('.control .like').hasClass('likeit'))
+				$('.control .like').removeClass('likeit');
+		}
 
 		// 获取ID
 		item = playlist[i];
@@ -186,7 +218,6 @@ $(document).ready(function(){
 		playMusic(randomNum(0,playlist.length));
 	}
 
-
 	$('.center').click(function() {
 		if ($('#player').hasClass('playing')){
 			audio.pause();
@@ -205,6 +236,10 @@ $(document).ready(function(){
 
 	$('.control .random').click(function(){
 		Saru_ChangePlayMode();
+	});
+
+	$('.control .like').click(function(){
+		Saru_LikeDislikeIt();
 	});
 
 
@@ -242,7 +277,8 @@ $(document).ready(function(){
 				}
 				break;
 
-			case 76: //L键; 喜欢
+			case 76: //L键; 喜欢; 不喜欢
+				Saru_LikeDislikeIt();
 				break;
 		}
 	});
