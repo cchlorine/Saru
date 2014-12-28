@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	/* 本地数据初始化 */
+
 	if(typeof(localStorage.SaruQuality) == undefined || isNaN(localStorage.SaruQuality))
 		localStorage.SaruQuality = 0;
 
@@ -11,15 +12,23 @@ $(document).ready(function(){
 		localStorage.SaruLike = '{}';
 
 	/* 常量 */
+
 	var audio     = document.getElementById('music'),
 			isPlaying = true,
 			SaruData  = {
 				'current' : 0,
 				'prev'    : -1,
 				'quality' : parseInt(localStorage.SaruQuality),
-				'rmode'   : parseInt(localStorage.SaruRepeat)
+				'pmode'   : parseInt(localStorage.SaruRepeat)
 			},
 			SaruLike = localStorage.SaruLike;
+
+	/* 播放顺序 */
+
+	var relist  = ['fa-random', 'fa-refresh', 'fa-retweet'],
+			retitle = ['Random', 'Cycle', 'Order'];
+
+	$('.control .repeat i').addClass(relist[SaruData['pmode']]).attr('title',retitle[SaruData['pmode']]);
 
 	for (var i = 0; i < playlist.length; i++){
 		var item = playlist[i];
@@ -67,7 +76,7 @@ $(document).ready(function(){
 		audio.pause();
 		var nextMusic = 0;
 
-		switch(SaruData['rmode']){
+		switch(SaruData['pmode']){
 			case 0: // 随机播放
 			default:
 				playMusic(randomNum(0, playlist.length));
@@ -98,6 +107,17 @@ $(document).ready(function(){
 			playMusic(SaruData['current']);
 		} else {
 			playMusic(SaruData['current'] - 1);
+		}
+	}
+
+	/* 播放顺序 */
+	var Saru_ChangePlayMode = function(){
+		if(SaruData['pmode'] == 2){
+			$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[0]).attr('title',retitle[0]);
+			SaruData['pmode'] = localStorage.SaruRepeat = 0;
+		} else {
+			$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[SaruData['pmode'] + 1]).attr('title', retitle[SaruData['pmode'] + 1]);
+			SaruData['pmode'] = localStorage.SaruRepeat = SaruData['pmode'] + 1;
 		}
 	}
 
@@ -177,11 +197,16 @@ $(document).ready(function(){
 
 	$('.control .prev').click(function(){
 		Saru_ChangePrev();
-	})
+	});
 
 	$('.control .next').click(function(){
 		Saru_ChangeNext();
-	})
+	});
+
+	$('.control .random').click(function(){
+		Saru_ChangePlayMode();
+	});
+
 
 	$('.play-list ul li').click(function(){
 		if(!$(this).hasClass('playing')){
