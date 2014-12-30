@@ -165,56 +165,59 @@ $(document).ready(function(){
 		}
 	};
 
-	/* 普通品质音乐处理 */
+	/* 音乐品质处理 */
 
-	var Saru_ExpNormal = function(v){
-		if (typeof v.type == undefined)
-			return false;
+	var SaruExp = {
+		Normal: function(v){
+			if (typeof v.type == undefined)
+				return false;
 
-		switch (v.type) {
-			case 'xiami':
-				$.ajax({
-					type: "GET",
-					cache: false,
-					dataType: 'jsonp',
-					jsonp: 'callback',
-					async: false,
-					url: 'http://www.xiami.com/song/playlist/id/' + v.source +'/object_name/collect/object_id/' + v.source + '/cat/json?_ksTS=1&callback=?',
-					success: function(data){
-						var item = playlist[v.id];
+				switch (v.type) {
+					case 'xiami':
+						$.ajax({
+							type: "GET",
+							cache: false,
+							dataType: 'jsonp',
+							jsonp: 'callback',
+							async: false,
+							url: 'http://www.xiami.com/song/playlist/id/' + v.source +'/object_name/collect/object_id/' + v.source + '/cat/json?_ksTS=1&callback=?',
+							success: function(data){
+								var item = playlist[v.id];
+
+								if (!data)
+									SaruControl.Next();
+
+								if (!item.cover)
+									playlist[v.id]['cover'] = data['data']['trackList'][0]['pic'];
+
+								playMusic({id: v.id, source: extFunc.decodeXiami(data['data']['trackList'][0]['location'])});
+							}
+						});
+						break;
+
+					case '163':
+						AV.initialize("fvyglppby9vbe7x772p7r8ddrxzcq2tcljkxyrf9fo5spbfr", "fspuitd5h1fz3fftya2go8fg293fpwthivno5vjdic2cmwz4");
+						AV.Cloud.run('get163', {id: v.source, type: "song"}, function (result) {
+
+						var data = JSON.parse(result)['songs'][0],
+						item = playlist[v.id];
 
 						if (!data)
 							SaruControl.Next();
 
 						if (!item.cover)
-							playlist[v.id]['cover'] = data['data']['trackList'][0]['pic'];
-
-						playMusic({id: v.id, source: extFunc.decodeXiami(data['data']['trackList'][0]['location'])});
-					}
-				});
-				break;
-
-			case '163':
-				AV.initialize("fvyglppby9vbe7x772p7r8ddrxzcq2tcljkxyrf9fo5spbfr", "fspuitd5h1fz3fftya2go8fg293fpwthivno5vjdic2cmwz4");
-				AV.Cloud.run('get163', {id: v.source, type: "song"}, function (result) {
-					var data = JSON.parse(result)['songs'][0],
-							item = playlist[v.id];
-
-					if (!data)
-						SaruControl.Next();
-
-					if (!item.cover)
-						playlist[v.id]['cover'] = data['blurPicUrl'];
+							playlist[v.id]['cover'] = data['blurPicUrl'];
 
 						playMusic({id: v.id, source: data['mp3Url']});
-				});
-				break;
+					});
+					break;
 
-			case 'file':
-				Saru_ExpTest(v);
-				break;
+				case 'file':
+					Saru_ExpTest(v);
+					break;
+			}
 		}
-	}
+	};
 
 	/* 音乐格式测试 */
 
@@ -232,7 +235,7 @@ $(document).ready(function(){
 			sources[source_dir[v.quality]]['id'] = k;
 		});
 
-		Saru_ExpNormal(sources[2]);
+		SaruExp.Normal(sources[2]);
 	}
 
 	var playMusic = function(ritem) {
