@@ -2,13 +2,13 @@ $(document).ready(function(){
 
 	/* 本地数据初始化 */
 
-	if(typeof(localStorage.SaruQuality) == undefined)
+	if(typeof(localStorage.SaruQuality) == "undefined")
 		localStorage.SaruQuality = 0;
 
-	if(typeof(localStorage.SaruRepeat) == undefined)
+	if(typeof(localStorage.SaruRepeat) == "undefined")
 		localStorage.SaruRepeat = 0;
 
-	if(typeof(localStorage.SaruLike) == undefined)
+	if(typeof(localStorage.SaruLike) == "undefined")
 		localStorage.SaruLike = '[]';
 
 	/* 常量 */
@@ -35,141 +35,228 @@ $(document).ready(function(){
 		$('.play-list ul').append('<li class="item' + i + '">' + item.title + ' - ' + item.artist + '</li>');
 	}
 
-	/* 随机 */
-	var randomNum = function(min,max){
-		var radx;
+	/* 依赖函数 */
 
-		// 避免只有一首时死循环
-		if ((+max - min) <= 1) return 0;
+	var extFunct = {
+		randNum: function(min, max) {
+			var radx;
 
-		// 随机避免和现在重复
-		while ( !radx || radx === SaruData['current'] ){
-			radx = Math.floor(min + Math.random() * (max - min));
+			// 避免只有一首时死循环
+			if ((+max - min) <= 1) return 0;
+
+			// 随机避免和现在重复
+			while ( !radx || radx === SaruData['current'] ) {
+				radx = Math.floor(min + Math.random() * (max - min));
+			}
+
+			return radx;
+		},
+
+		decodeXiami: function(sourceString) {
+			var _loc9 = Number(sourceString.charAt(0));
+			var _loc7 = sourceString.substring(1);
+			var _loc5 = Math.floor(_loc7.length / _loc9);
+			var _loc6 = _loc7.length % _loc9;
+			var _loc2 = new Array();
+			for (var _loc3 = 0; _loc3 < _loc6; ++_loc3) {
+				if (_loc2[_loc3] == undefined) {
+					_loc2[_loc3] = "";
+				} // end if
+				_loc2[_loc3] = _loc7.substr((_loc5 + 1) * _loc3, _loc5 + 1);
+			} // end of for
+
+			for (var _loc3 = _loc6; _loc3 < _loc9; ++_loc3) {
+				_loc2[_loc3] = _loc7.substr(_loc5 * (_loc3 - _loc6) + (_loc5 + 1) * _loc6, _loc5);
+			} // end of for
+
+			var _loc4 = "";
+			for (var _loc3 = 0; _loc3 < _loc2[0].length; ++_loc3) {
+				for (var _loc1 = 0; _loc1 < _loc2.length; ++_loc1) {
+					_loc4 = _loc4 + _loc2[_loc1].charAt(_loc3);
+				} // end of for
+			} // end of for
+
+			_loc4 = unescape(_loc4);
+			var _loc8 = "";
+			for (var _loc3 = 0; _loc3 < _loc4.length; ++_loc3) {
+				if (_loc4.charAt(_loc3) == "^") {
+					_loc8 = _loc8 + "0";
+					continue;
+				} // end if
+				_loc8 = _loc8 + _loc4.charAt(_loc3);
+
+			} // end of for //trans ^ to 0
+			return (_loc8);
 		}
+	};
 
-		return radx;
-	}
+	/* 播放控制 */
+
+	var SaruControl = {
+		Prev: function() { // 上一首
+			audio.pause();
+
+			if ((+SaruData['current'] + 1) === SaruData['prev'] && SaruData['prev'] > -1) {
+				loadMusic(SaruData['prev']);
+			} else if (+SaruData['current'] == 0){
+				loadMusic(playlist.length - 1);
+			} else if (SaruData['current'] == playlist.length) {
+				loadMusic(SaruData['current']);
+			} else {
+				loadMusic(SaruData['current'] - 1);
+			}
+		},
+
+		Next: function() { // 下一首
+			audio.pause();
+			var nextMusic = 0;
+
+			switch(SaruData['pmode']) {
+				case 0: // 随机播放
+				default:
+					loadMusic(extFunct.randNum(0, playlist.length));
+					break;
+
+				case 1: // 单曲循环
+					audio.currentTime = 0.0;
+					audio.play();
+					break;
+
+				case 2: // 列表顺序
+					if (SaruData['current'] == playlist.length - 1){
+						loadMusic(0);
+					} else {
+						loadMusic(SaruData['current'] + 1);
+					}
+					break;
+			}
+		},
+
+		PlayMode: function() { // 播放顺序
+				if(SaruData['pmode'] == 2){
+					$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[0]).attr('title',retitle[0]);
+					SaruData['pmode'] = localStorage.SaruRepeat = 0;
+				} else {
+					$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[SaruData['pmode'] + 1]).attr('title', retitle[SaruData['pmode'] + 1]);
+					SaruData['pmode'] = localStorage.SaruRepeat = SaruData['pmode'] + 1;
+				}
+		}
+	};
 
 	/* 播放事件 */
 
-	var Saru_EventPlay = function(){
-		$('#player').addClass('playing');
-		$('.start i').removeClass('fa-play').addClass('fa-pause');
-	}
+	var SaruEvent = {
+		Play: function() { // 播放事件
+			$('#player').addClass('playing');
+			$('.start i').removeClass('fa-play').addClass('fa-pause');
+		},
 
-	/* 暂停事件 */
+		Stop: function() { // 暂停事件
+			$('#player').removeClass('playing');
+			$('.start i').removeClass('fa-pause').addClass('fa-play');
+		},
 
-	var Saru_EventStop = function(){
-		$('#player').removeClass('playing');
-		$('.start i').removeClass('fa-pause').addClass('fa-play');
-	}
+		UpdateProgress: function() { // 进度条更新事件
+			$('#progress .current').css({'width': audio.currentTime / audio.duration * 100 + '%'});
+		},
 
-	/* 进度条更新事件 */
+		End: function() { // 结束事件
+			SaruControl.Next();
+		}
+	};
 
-	var Saru_EventUpdateProgress = function() {
-		$('#progress .current').css({'width': audio.currentTime / audio.duration * 100 + '%'});
-	}
+	/* 普通品质音乐处理 */
 
-	/* 自动切歌 */
+	var Saru_ExpNormal = function(v){
+		if (typeof v.type == undefined)
+			return false;
 
-	var Saru_ChangeNext = function(){
-		audio.pause();
-		var nextMusic = 0;
+		switch (v.type) {
+			case 'xiami':
+				$.ajax({
+					type: "GET",
+					cache: false,
+					dataType: 'jsonp',
+					jsonp: 'callback',
+					async: false,
+					url: 'http://www.xiami.com/song/playlist/id/' + v.source +'/object_name/collect/object_id/' + v.source + '/cat/json?_ksTS=1&callback=?',
+					success: function(data){
+						var item = playlist[v.id];
 
-		switch(SaruData['pmode']){
-			case 0: // 随机播放
-			default:
-				playMusic(randomNum(0, playlist.length));
+						if (!data)
+							SaruControl.Next();
+
+						if (!item.cover)
+							playlist[v.id]['cover'] = data['data']['trackList'][0]['pic'];
+
+						playMusic({id: v.id, source: extFunc.decodeXiami(data['data']['trackList'][0]['location'])});
+					}
+				});
 				break;
 
-			case 1: // 单曲循环
-				audio.currentTime = 0.0;
-				audio.play();
+			case '163':
+				AV.initialize("fvyglppby9vbe7x772p7r8ddrxzcq2tcljkxyrf9fo5spbfr", "fspuitd5h1fz3fftya2go8fg293fpwthivno5vjdic2cmwz4");
+				AV.Cloud.run('get163', {id: v.source, type: "song"}, function (result) {
+					var data = JSON.parse(result)['songs'][0],
+							item = playlist[v.id];
+
+					if (!data)
+						SaruControl.Next();
+
+					if (!item.cover)
+						playlist[v.id]['cover'] = data['blurPicUrl'];
+
+						playMusic({id: v.id, source: data['mp3Url']});
+				});
 				break;
 
-			case 2: // 列表顺序
-				if (SaruData['current'] == playlist.length - 1){
-					playMusic(0);
-				} else {
-					playMusic(SaruData['current'] + 1);
-				}
+			case 'file':
+				Saru_ExpTest(v);
 				break;
 		}
 	}
 
-	var Saru_ChangePrev = function(){
-		audio.pause();
-		if((+SaruData['current'] + 1) === SaruData['prev'] && SaruData['prev'] > -1) {
-			playMusic(SaruData['prev']);
-		} else if (+SaruData['current'] == 0){
-			playMusic(playlist.length - 1);
-		} else if (SaruData['current'] == playlist.length) {
-			playMusic(SaruData['current']);
-		} else {
-			playMusic(SaruData['current'] - 1);
-		}
-	}
+	/* 音乐格式测试 */
 
-	/* 播放顺序 */
-
-	var Saru_ChangePlayMode = function(){
-		if(SaruData['pmode'] == 2){
-			$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[0]).attr('title',retitle[0]);
-			SaruData['pmode'] = localStorage.SaruRepeat = 0;
-		} else {
-			$('.control .repeat i').removeClass(relist[SaruData['pmode']]).addClass(relist[SaruData['pmode'] + 1]).attr('title', retitle[SaruData['pmode'] + 1]);
-			SaruData['pmode'] = localStorage.SaruRepeat = SaruData['pmode'] + 1;
-		}
-	}
-
-	/* 喜欢不喜欢歌曲 */
-
-	var Saru_LikeDislike = function(i){
-		var LikePosition = SaruLike.indexOf(i);
-
-		if (LikePosition == -1) {
-			SaruLike.push(i);
-			$('.control .like').addClass('likeit');
-		} else {
-			SaruLike.splice((LikePosition - 1), 1);
-			$('.control .like').removeClass('likeit');
-		}
-
-		localStorage.SaruLike = JSON.stringify(SaruLike);
-	}
-
-	/* 喜欢这首 */
-
-	var Saru_LikeDislikeIt = function(){
-		Saru_LikeDislike(SaruData['current']);
+	var Saru_ExpTest = function(v) {
+		playMusic({id: v.id, source: v['source']});
 	}
 
 	/* 音乐播放 */
 
-	var playMusic = function(i){
+	var loadMusic = function(i){
+
+		var source_dir = {'lossless': 0, 'high': 1, 'normal': 2}, sources = [];
+		playlist[0]['sources'].forEach(function(v, k, c){
+			sources[source_dir[v.quality]] = v;
+			sources[source_dir[v.quality]]['id'] = k;
+		});
+
+		Saru_ExpNormal(sources[2]);
+	}
+
+	var playMusic = function(ritem) {
+		var item = playlist[ritem.id];
+
 		// 记录
 		SaruData['prev']    = localStorage.SaruPrev    = SaruData['current'];
-		SaruData['current'] = localStorage.SaruCurrent = i;
-		location.hash = '#!' + i;
+		SaruData['current'] = localStorage.SaruCurrent = item.id;
+		location.hash = '#!' + item.id;
 
 		// 判断是否喜欢
-		if (SaruLike.indexOf(i) > -1) {
+		/*if (SaruLike.indexOf(item.id) > -1) {
 			if (!$('.control .like').hasClass('likeit'))
 				$('.control .like').addClass('likeit');
 		} else {
 			if ($('.control .like').hasClass('likeit'))
 				$('.control .like').removeClass('likeit');
-		}
+		}*/
 
-		// 获取ID
-		item = playlist[i];
-
-		audio.setAttribute("src", item['sources'][0]['source']);
-		audio.addEventListener('play',  Saru_EventPlay, false);
-		audio.addEventListener('pause', Saru_EventStop, false);
-		audio.addEventListener('timeupdate', Saru_EventUpdateProgress, false);
-		audio.addEventListener('ended', Saru_ChangeNext, false);
-
+		audio.setAttribute("src", ritem['source']);
+		audio.addEventListener('play',  SaruEvent.Play, false);
+		audio.addEventListener('pause', SaruEvent.Stop, false);
+		audio.addEventListener('timeupdate', SaruEvent.UpdateProgress, false);
+		audio.addEventListener('ended', SaruEvent.End, false);
 
 		// 设置封面
 		cover = item['cover'] ? item['cover'] : 'img/album.jpg';
@@ -211,11 +298,11 @@ $(document).ready(function(){
 	if (location.hash.match(/[\d]+/)) {
 		var hash = location.hash.match(/[\d]+/)[0];
 		if (hash < playlist.length)
-			playMusic(hash);
+			loadMusic(hash);
 	} else if (localStorage.SaruPrev > -1 && localStorage.SaruPrev < playlist.length) {
-		playMusic(localStorage.SaruPrev);
+		loadMusic(localStorage.SaruPrev);
 	} else {
-		playMusic(randomNum(0,playlist.length));
+		loadMusic(extFunct.randNum(0,playlist.length));
 	}
 
 	$('.center').click(function() {
@@ -227,31 +314,19 @@ $(document).ready(function(){
 	});
 
 	$('.control .prev').click(function(){
-		Saru_ChangePrev();
+		SaruControl.Prev();
 	});
 
 	$('.control .next').click(function(){
-		Saru_ChangeNext();
+		SaruControl.Next();
 	});
 
 	$('.control .repeat').click(function(){
-		Saru_ChangePlayMode();
+		SaruControl.PlayMode();
 	});
 
 	$('.control .like').click(function(){
-		Saru_LikeDislikeIt();
-	});
-
-
-	$('.play-list ul li').click(function(){
-		if(!$(this).hasClass('playing')){
-			var className = $(this).attr('class');
-			var num       = parseInt(className.substr(4));
-			$('#wrap .list-button').animate({marginRight: -5},300);
-			$('#wrap .play-list ul').animate({marginRight: -400},300);
-			audio.pause();
-			playMusic(num);
-		}
+		//Saru_LikeDislikeIt();
 	});
 
 	/* HotKey */
@@ -261,11 +336,11 @@ $(document).ready(function(){
 		switch (keycode) {
 			case 39:
 			case 78: // 右键, n键; 下一首
-				Saru_ChangeNext();
+				SaruControl.Next();
 				break;
 
 			case 37: // 左键; 上一首
-				Saru_ChangePrev();
+				SaruControl.Prev();
 				break;
 
 			case 80:
@@ -278,11 +353,11 @@ $(document).ready(function(){
 				break;
 
 			case 77: //M键; 播放顺序
-				Saru_ChangePlayMode();
+				SaruControl.PlayMode();
 				break;
 
 			case 76: //L键; 喜欢; 不喜欢
-				Saru_LikeDislikeIt();
+				//Saru_LikeDislikeIt();
 				break;
 		}
 	});

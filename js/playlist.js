@@ -1,16 +1,18 @@
 var playlist = [
   {
+    "id"      : 1,
     "title"   : "Centuries",
     "album"   : "American Beauty / American Psycho",
     "artist"  : "Fall out boy",
     "cover"   : "songs/Centuries.webp",
     "sources" : [
       {
-        "songext" : "m4a",
+        "type"    : "xiami",
         "quality" : "normal",
-        "source"  : "songs/Centuries.m4a"
+        "source"  : "1773502447"
       },
       {
+        "type"    : "file",
         "songext" : "m4a",
         "quality" : "high",
         "source"  : "songs/Centuries.m4a"
