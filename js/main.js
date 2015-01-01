@@ -150,7 +150,52 @@ var Saru = {
 
 	/* 音质处理 */
 	Exp: {
-		Normal: function(v){
+		Init: function(v) {
+			var source_r = ['LossLess', 'High', 'Normal'],
+					QR       = Saru.Quality;
+
+			if (v.length < 1)
+				return this.Control.Next();
+
+			while (QR != 3) {
+				if (typeof v[QR] == 'undefined') {
+					switch (QR) {
+						case 1:
+							if (typeof v[0] === 'undefined')
+								QR = 0;
+							else if (typeof v[2] === 'undefined')
+								QR = 2;
+
+						case 0:
+						case 2:
+							QR = 1;
+					}
+
+					continue;
+				}
+
+				var status = Saru.Exp[source_r[QR]](v[QR]);
+				if (status == false) {
+					switch (QR) {
+						case 1:
+							if (typeof v[0] === 'undefined')
+								QR = 0;
+							else if (typeof v[2] === 'undefined')
+								QR = 2;
+
+						case 0:
+						case 2:
+							QR = 1;
+					}
+
+					continue;
+				} else {
+					QR = 3;
+				}
+			}
+		},
+
+		Normal: function(v) {
 			if (typeof v.type == undefined)
 				return false;
 
@@ -175,6 +220,8 @@ var Saru = {
 								Saru.Play({id: v.id, source: Saru.extFunc.decodeXiami(data['data']['trackList'][0]['location'])});
 							}
 						});
+
+						return true;
 						break;
 
 					case '163':
@@ -192,12 +239,22 @@ var Saru = {
 
 							Saru.Play({id: v.id, source: data['mp3Url']});
 						});
+
+						return true;
 						break;
 
 					case 'file':
-						this.Test(v);
+						return this.Test(v);
 						break;
 			}
+		},
+
+		High: function(v) {
+			return this.Test(v);
+		},
+
+		LossLess: function(v) {
+			return this.Test(v);
 		},
 
 		Test: function(v) {
@@ -217,7 +274,7 @@ var Saru = {
 				if (tester.canPlayType(data[1]))
 					return Saru.Play({id: v.id, source: v['source']});
 				else
-					return Saru.Control.Next();
+					return false;
 			}
 		}
 	},
@@ -291,7 +348,7 @@ var Saru = {
 			sources[source_dir[v.quality]]['id'] = i;
 		});
 
-		this.Exp.Normal(sources[1]);
+		this.Exp.Init(sources);
 	},
 
 	/* 依赖函数 */
