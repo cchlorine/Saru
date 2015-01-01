@@ -350,7 +350,6 @@ var Saru = {
 };
 
 $(document).ready(function(){
-
 	Saru.Init();
 
 	$('.center').click(function() {
@@ -374,7 +373,7 @@ $(document).ready(function(){
 	});
 
 	$('.control .like').click(function(){
-		//Saru_LikeDislikeIt();
+		Saru.Control.Like();
 	});
 
 	/* HotKey */
@@ -405,7 +404,7 @@ $(document).ready(function(){
 				break;
 
 			case 76: //L键; 喜欢; 不喜欢
-				//Saru_LikeDislikeIt();
+				Saru.Control.Like();
 				break;
 		}
 	});
