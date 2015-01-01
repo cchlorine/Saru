@@ -109,6 +109,21 @@ var Saru = {
 				$('.control .repeat i').removeClass(Saru.Repeat.List[Saru.Repeat.Mode]).addClass(Saru.Repeat.List[Saru.Repeat.Mode + 1]).attr('title', Saru.Repeat.Title[Saru.Repeat.Mode + 1]);
 				Saru.Repeat.Mode = localStorage.SaruRepeat = Saru.Repeat.Mode + 1;
 			}
+		},
+
+		Like: function() { // 喜欢
+			var i = Saru.Current,
+					LikePosition = Saru.Like.indexOf(i);
+
+			if (LikePosition == -1) {
+				Saru.Like.push(i);
+				$('.control .like').addClass('likeit');
+			} else {
+				Saru.Like.splice((LikePosition - 1), 1);
+				$('.control .like').removeClass('likeit');
+			}
+
+			localStorage.SaruLike = JSON.stringify(Saru.Like);
 		}
 	},
 
@@ -217,6 +232,15 @@ var Saru = {
 		this.Prev     = localStorage.SaruPrev    = this.Current;
 		this.Current  = localStorage.SaruCurrent = item.id;
 		location.hash = '#!' + item.id;
+
+		// 判断是否喜欢
+		if (Saru.Like.indexOf(item.id) > -1) {
+			if (!$('.control .like').hasClass('likeit'))
+				$('.control .like').addClass('likeit');
+		} else {
+			if ($('.control .like').hasClass('likeit'))
+				$('.control .like').removeClass('likeit');
+		}
 
 		this.audio.setAttribute('src', ritem['source']);
 		this.audio.addEventListener('play',  this.Event.Play, false);
