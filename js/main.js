@@ -27,11 +27,6 @@ var Saru = {
 		// 循环模式设置
 		$('.control .repeat i').addClass(this.Repeat.List[this.Repeat.Mode]).attr('title', this.Repeat.Title[this.Repeat.Mode]);
 
-		/*if (location.hash.match(/[\d]+/)) {
-			var hash = location.hash.match(/[\d]+/)[0];
-			if (hash < playlist.length)
-				Saru.Load(hash);
-		} else*/
 		if (localStorage.SaruPrev > -1 && localStorage.SaruPrev < playlist.length) {
 			this.Load(localStorage.SaruPrev);
 		} else {
@@ -159,8 +154,29 @@ var Saru = {
 						break;
 
 					case 'file':
-						// Saru_ExpTest(v);
+						this.Test(v);
 						break;
+			}
+		},
+
+		Test: function(v) {
+			var ext = {
+				m4a: ['audio', 'audio/mp4; codecs="mp4a.40.5"'],
+				oog: ['audio', 'audio/ogg; codecs="vorbis"'],
+				mp3: [true]
+			};
+
+			var data = ext[v['songext']];
+			if (data[0] == true) {
+				return Saru.Play({id: v.id, source: v['source']});
+			} else if (typeof ext[v['songext']] == 'undefined') {
+				return Saru.Play({id: v.id, source: v['source']});
+			} else {
+				var tester = document.createElement(data[0]);
+				if (tester.canPlayType(data[1]))
+					return Saru.Play({id: v.id, source: v['source']});
+				else
+					return Saru.Control.Next();
 			}
 		}
 	},
@@ -168,6 +184,8 @@ var Saru = {
 	/* 音乐播放 */
 	Play: function(ritem) {
 		var item = playlist[ritem.id];
+		if (!item)
+			return this.Control.Next();
 
 		// 记录
 		this.Prev    = localStorage.SaruPrev    = this.Current;
@@ -179,6 +197,7 @@ var Saru = {
 		this.audio.addEventListener('pause', this.Event.Stop, false);
 		this.audio.addEventListener('timeupdate', this.Event.UpdateProgress, false);
 		this.audio.addEventListener('ended', this.Event.End, false);
+		this.audio.addEventListener('error', this.Control.Next, false);
 
 		// 设置封面
 		cover = item['cover'] ? item['cover'] : 'img/album.jpg';
@@ -217,12 +236,12 @@ var Saru = {
 	/* 音乐预加载 */
 	Load: function(i) {
 		var source_dir = {'lossless': 0, 'high': 1, 'normal': 2}, sources = [];
-		playlist[0]['sources'].forEach(function(v, k, c){
+		playlist[i]['sources'].forEach(function(v, k, c){
 			sources[source_dir[v.quality]] = v;
-			sources[source_dir[v.quality]]['id'] = k;
+			sources[source_dir[v.quality]]['id'] = i;
 		});
 
-		this.Exp.Normal(sources[2]);
+		this.Exp.Normal(sources[1]);
 	},
 
 	/* 依赖函数 */
