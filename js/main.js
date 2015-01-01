@@ -34,6 +34,27 @@ var Saru = {
 		}
 	},
 
+	/* 搜索 */
+	Search: {
+		Id: function(i) {
+			var left = 0,
+					right = playlist.length;
+
+			while (left <= right) {
+				var center = Math.floor((left + right) / 2);
+				if (playlist[center].id == i)
+					return playlist[center];
+				if (i < playlist[center].id) {
+					right = center - 1;
+				} else {
+					left = center + 1;
+				}
+			}
+
+			return false;
+		}
+	},
+
 	/* 控制 */
 	Control: {
 		Prev: function() { // 上一首
