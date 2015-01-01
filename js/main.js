@@ -27,7 +27,12 @@ var Saru = {
 		// 循环模式设置
 		$('.control .repeat i').addClass(this.Repeat.List[this.Repeat.Mode]).attr('title', this.Repeat.Title[this.Repeat.Mode]);
 
-		if (localStorage.SaruPrev > -1 && localStorage.SaruPrev < playlist.length) {
+		if (location.hash.match(/[\d]+/)) {
+			var hash = location.hash.match(/[\d]+/)[0];
+			var h = this.Search.Id(hash);
+			if (h > -1)
+				this.Load(h);
+		} else if (localStorage.SaruPrev > -1 && localStorage.SaruPrev < playlist.length) {
 			this.Load(localStorage.SaruPrev);
 		} else {
 			this.Load(this.extFunc.randNum(0,playlist.length));
@@ -43,7 +48,7 @@ var Saru = {
 			while (left <= right) {
 				var center = Math.floor((left + right) / 2);
 				if (playlist[center].id == i)
-					return playlist[center];
+					return center;
 				if (i < playlist[center].id) {
 					right = center - 1;
 				} else {
@@ -209,8 +214,8 @@ var Saru = {
 			return this.Control.Next();
 
 		// 记录
-		this.Prev    = localStorage.SaruPrev    = this.Current;
-		this.Current = localStorage.SaruCurrent = item.id;
+		this.Prev     = localStorage.SaruPrev    = this.Current;
+		this.Current  = localStorage.SaruCurrent = item.id;
 		location.hash = '#!' + item.id;
 
 		this.audio.setAttribute('src', ritem['source']);
